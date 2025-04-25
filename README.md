@@ -1,14 +1,27 @@
 # Project
 
-> This repo has been populated by an initial template to help get you started. Please
-> make sure to update the content to build a great experience for community-building.
+Reliability is a major requirement for any application. Building reliable cloud applications is achieved through _resiliency_, which should be implemented at every level of the infrastructure and application. Plenty of [guidelines](https://learn.microsoft.com/azure/well-architected/reliability/principles) exist on how to select the right services and configuration, but writing resilient code is just as essential. After all, there can be no weak links in the stack: Badly written code can easily bring an otherwise well architected application down. 
 
-As the maintainer of this project, please make a few updates:
+This project aims to showcase several common anti-patterns in software, encountered in real-life cloud applications around the world. Not only do we provide an explanation, we also include code samples of what (not) to do.
 
-- Improving this README.MD file to provide a great experience
-- Updating SUPPORT.MD with content about this project's support experience
-- Understanding the security reporting process in SECURITY.MD
-- Remove this section from the README
+This has been a community effort to create and we would love to see additional contributions to grow the collection of resilient coding patterns.
+
+# The Patterns
+
+The following lists shows several common patterns in cloud applications. Each pattern is linked to its dedicated section that provides a comprehensive description, code samples, and links to sample artifacts that implement the pattern. 
+
+## 01 - The Retry	Pattern
+## 02 - The Circuit Breaker	Pattern
+## 03 - The Cache Aside	Pattern
+## 04 - The Queue Based Load Leveling Pattern
+## 05 - The Strangler Fig Pattern
+## 06 - The Bulkhead Pattern
+## 07 - Scaling to different SKUs
+## 08 - Managing Connection Strings and Secrets
+## 09 - Handing Timeouts
+## 10 - Graceful Error Logging & propagation
+## 11 - Fallback Mechanisms
+
 
 ## Contributing
 
