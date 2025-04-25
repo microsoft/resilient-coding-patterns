@@ -18,8 +18,7 @@ The following lists shows several common patterns in cloud applications. Each pa
 ## 06 - The Bulkhead Pattern
 ## 07 - Scaling to different SKUs
 ## 08 - Managing Connection Strings and Secrets
-## 09 - Handing Timeouts
-## 10 - Graceful Error Logging & propagation
+## 09 - Handling Timeouts
 ## 11 - Fallback Mechanisms
 
 
