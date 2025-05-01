@@ -28,5 +28,3 @@
 **Pattern implementation**
 
 ## Related Patterns
-
-- [Retry Pattern](01-retry.md)
