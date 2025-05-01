@@ -50,4 +50,31 @@ public async Task<string> GetDataWithRetryAsync()
     }
     return string.Empty;
 }
+```
+## Code Samples: Python
 
+**Before pattern implementation**
+```python
+# ...existing code...
+import requests
+
+def get_data():
+    return requests.get("https://example.com/data").text
+```
+
+**Pattern implementation**
+```python
+import time
+import requests
+
+def get_data_with_retry(retry_count=3, delay=2):
+    for attempt in range(retry_count):
+        try:
+            response = requests.get("https://example.com/data")
+            return response.text
+        except requests.exceptions.RequestException:
+            if attempt == retry_count - 1:
+                raise
+            time.sleep(delay)
+    return None
+```

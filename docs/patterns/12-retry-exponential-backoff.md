@@ -104,6 +104,77 @@ class Program
 **Pattern implementation**
 
 ```csharp
+using System;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
+
+class Program
+{
+    private static readonly HttpClient _httpClient = new HttpClient();
+
+    static async Task Main()
+    {
+        string url = "https://example.com/api/resource";
+        var response = await MakeApiCallWithRetryAsync(url);
+
+        if (response != null && response.IsSuccessStatusCode)
+        {
+            Console.WriteLine("API call succeeded");
+        }
+        else
+        {
+            Console.WriteLine($"API call ultimately failed. Status: {response?.StatusCode}");
+        }
+    }
+
+    public static async Task<HttpResponseMessage?> MakeApiCallWithRetryAsync(string url)
+    {
+        const int maxRetries = 5;
+        const int baseDelayMs = 500; // 0.5 seconds
+
+        for (int attempt = 0; attempt <= maxRetries; attempt++)
+        {
+            try
+            {
+                HttpResponseMessage response = await _httpClient.GetAsync(url);
+
+                if (IsTransient(response.StatusCode))
+                {
+                    Console.WriteLine($"Transient error: {response.StatusCode}. Attempt {attempt + 1} of {maxRetries}.");
+
+                    if (attempt == maxRetries)
+                        return response;
+
+                    await Task.Delay(GetExponentialBackoffWithJitter(baseDelayMs, attempt));
+                    continue;
+                }
+
+                return response; // Success or non-retryable failure
+            }
+            catch (HttpRequestException ex) when (attempt < maxRetries)
+            {
+                Console.WriteLine($"Network error: {ex.Message}. Attempt {attempt + 1} of {maxRetries}.");
+                await Task.Delay(GetExponentialBackoffWithJitter(baseDelayMs, attempt));
+            }
+        }
+
+        return null; // All retries failed
+    }
+
+    private static bool IsTransient(HttpStatusCode statusCode) =>
+        statusCode == HttpStatusCode.TooManyRequests ||       // 429
+        statusCode == HttpStatusCode.ServiceUnavailable ||    // 503
+        statusCode == HttpStatusCode.GatewayTimeout ||        // 504
+        statusCode == HttpStatusCode.RequestTimeout;          // 408
+
+    private static TimeSpan GetExponentialBackoffWithJitter(int baseDelayMs, int attempt)
+    {
+        int exponentialDelay = baseDelayMs * (int)Math.Pow(2, attempt);
+        int jitter = new Random().Next(0, 1000); // up to 1s of jitter
+        return TimeSpan.FromMilliseconds(Math.Min(exponentialDelay + jitter, 30000)); // cap at 30s
+    }
+}
 
 ```
 
@@ -158,6 +229,66 @@ if __name__ == "__main__":
 **Pattern implementation**
 
 ```python
+import requests
+import time
+import random
+
+MAX_RETRIES = 5
+BASE_DELAY = 0.5  # seconds
+MAX_DELAY = 30    # seconds
+
+TRANSIENT_STATUSES = {408, 429, 503, 504}
+
+def make_api_call_with_retry(url):
+    for attempt in range(MAX_RETRIES + 1):
+        try:
+            response = requests.get(url)
+
+            if response.status_code in TRANSIENT_STATUSES:
+                print(f"Transient error: {response.status_code}. Attempt {attempt + 1} of {MAX_RETRIES}.")
+
+                if attempt == MAX_RETRIES:
+                    return response  # Give up after final retry
+
+                delay = exponential_backoff_with_jitter(BASE_DELAY, attempt)
+                print(f"Waiting {delay:.2f}s before retrying...")
+                time.sleep(delay)
+                continue
+
+            return response  # Success or non-transient failure
+
+        except requests.exceptions.RequestException as ex:
+            print(f"Network error: {ex}. Attempt {attempt + 1} of {MAX_RETRIES}.")
+
+            if attempt == MAX_RETRIES:
+                raise  # Rethrow after last attempt
+
+            delay = exponential_backoff_with_jitter(BASE_DELAY, attempt)
+            print(f"Waiting {delay:.2f}s before retrying...")
+            time.sleep(delay)
+
+    return None  # All retries failed
+
+def exponential_backoff_with_jitter(base, attempt):
+    exponential_delay = base * (2 ** attempt)
+    jitter = random.uniform(0, 1.0)
+    return min(exponential_delay + jitter, MAX_DELAY)
+
+def main():
+    url = "https://example.com/api/resource"
+    try:
+        response = make_api_call_with_retry(url)
+
+        if response and 200 <= response.status_code < 300:
+            print("API call succeeded")
+        else:
+            print(f"API call ultimately failed. Status code: {response.status_code if response else 'None'}")
+
+    except Exception as e:
+        print(f"API call failed with an unrecoverable error: {e}")
+
+if __name__ == "__main__":
+    main()
 
 ```
 

@@ -23,51 +23,57 @@ Maintain a centrally managed pool of reusable connections. When a request needs 
 
 **Before pattern implementation**
 ```csharp
-// ...existing code...
-public class DbService
+public class CustomerService
 {
-    public async Task<int> GetDataCountAsync()
+    private SqlConnection _connection;
+
+    public CustomerService()
     {
-        using (SqlConnection connection = new SqlConnection("YourConnectionString"))
-        {
-            await connection.OpenAsync();
-            // Perform operations
-            // Connection is disposed after usage
-            return 0;
-        }
+        // Persistent connection kept open throughout the service lifetime
+        _connection = new SqlConnection("ConnectionInfo");
+        _connection.Open();
+    }
+
+    public string GetCustomerName(int customerId)
+    {
+        SqlCommand cmd = new SqlCommand("SELECT Name FROM Customers WHERE Id = @Id", _connection);
+        cmd.Parameters.AddWithValue("@Id", customerId);
+
+        var result = cmd.ExecuteScalar();
+        return result?.ToString();
+    }
+
+    ~CustomerService()
+    {
+        _connection?.Close();
     }
 }
+
 ```
 
 **Pattern implementation**
 
 ```csharp
-public static class ConnectionPool
+public class CustomerService
 {
-    private static readonly SqlConnection _sharedConnection;
+    private readonly string _connectionString = "ConnectionString";
 
-    static ConnectionPool()
+    public async Task<string> GetCustomerNameAsync(int customerId)
     {
-        _sharedConnection = new SqlConnection("YourConnectionString");
-        _sharedConnection.Open();
-    }
+        // Open and close a new SqlConnection each time — this enables connection pooling
+        await using (SqlConnection conn = new SqlConnection(_connectionString))
+        {
+            await conn.OpenAsync();
 
-    public static SqlConnection GetConnection()
-    {
-        return _sharedConnection;
+            SqlCommand cmd = new SqlCommand("SELECT Name FROM Customers WHERE Id = @Id", conn);
+            cmd.Parameters.AddWithValue("@Id", customerId);
+
+            var result = await cmd.ExecuteScalarAsync();
+            return result?.ToString();
+        }
     }
 }
 
-public class DbService
-{
-    public async Task<int> GetDataCountPooledAsync()
-    {
-        var connection = ConnectionPool.GetConnection();
-        // Assuming connection is already open
-        // Perform operations
-        return 0;
-    }
-}
 ```
 
 ## Code Examples: Python
