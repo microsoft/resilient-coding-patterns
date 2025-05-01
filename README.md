@@ -14,43 +14,43 @@ The following lists shows several common patterns in cloud applications. Each pa
 
 Retry patterns are of key importance in cloud applications. Because of the size and scale of applications and infrastructure, transient network errors occur frequently. This means that connections to dependencies must be re-established effectively in case they are lost.
 
-## 02 - The Circuit Breaker Pattern
+## [02 - The Circuit Breaker Pattern](./docs/patterns/02-circuit-breaker.md)
 
 The Circuit Breaker pattern is used to detect failures and encapsulate the logic of preventing a failure from constantly recurring during maintenance, temporary unavailability of dependencies, or other unexpected difficulties. By "breaking the circuit," the application can fail fast and avoid making requests that are likely to fail, allowing time for the external system to recover.
 
-## 03 - The Cache Aside Pattern
+## [03 - The Cache Aside Pattern](./docs/patterns/03-cache-aside.md)
 
 The Cache Aside pattern improves performance and scalability by loading data into a cache only when necessary. Applications retrieve data from the cache if available; otherwise, they fetch it from the data store and populate the cache for subsequent requests, ensuring that frequently accessed data is quickly available.
 
-## 04 - The Queue Based Load Leveling Pattern
+## [04 - The Queue Based Load Leveling Pattern](./docs/patterns/04-queue-based-load-leveling.md)
 
 The Queue Based Load Leveling pattern uses a queue to buffer requests between a task and a service that processes those requests. This helps to smooth out intermittent heavy loads, prevent service overload, and improve the reliability and scalability of the application.
 
-## 05 - The Strangler Fig Pattern
+## [05 - The Strangler Fig Pattern](./docs/patterns/05-strangler-fig.md)
 
 The Strangler Fig pattern enables incremental migration of legacy systems by gradually replacing specific pieces of functionality with new services or components. Over time, the old system is "strangled" as more features are redirected to the new implementation, reducing risk and downtime.
 
-## 06 - The Bulkhead Pattern
+## [06 - The Bulkhead Pattern](./docs/patterns/06-bulkhead.md)
 
 The Bulkhead pattern isolates critical resources, such as connections or threads, into separate pools so that if one pool fails, the others continue to function. This containment prevents failures in one part of the system from cascading and affecting the entire application.
 
-## 07 - Scaling to different SKUs
+## [07 - Scaling to different SKUs](./docs/patterns/07-scaling-to-skus.md)
 
 Scaling to different SKUs involves designing applications to run efficiently across various hardware or service tiers, allowing for cost optimization and flexibility. This pattern ensures that the application can adapt to different performance and capacity requirements without significant changes.
 
-## 08 - Managing Connection Strings and Secrets
+## [08 - Managing Connection Strings and Secrets](./docs/patterns/08-connection-strings-secrets.md)
 
 Managing Connection Strings and Secrets focuses on securely storing and accessing sensitive configuration data, such as database connection strings and API keys. This pattern emphasizes the use of secure storage solutions and best practices to prevent accidental exposure and unauthorized access.
 
-## 09 - Handling Timeouts
+## [09 - Handling Timeouts](./docs/patterns/09-handling-timeouts.md)
 
 Handling Timeouts is about setting appropriate time limits for operations that interact with external resources or services. By defining timeouts, applications can avoid waiting indefinitely for responses, improve reliability, and provide better user experiences during transient failures.
 
-## 10 - Graceful Error Logging & Propagation
+## [10 - Graceful Error Logging & Propagation](./docs/patterns/10-graceful-errors.md)
 
 Graceful Error Logging & Propagation ensures that errors are captured, logged, and communicated in a way that aids troubleshooting without exposing sensitive information. This pattern helps maintain application stability and provides actionable insights for developers and operators.
 
-## 11 - Fallback Mechanisms
+## [11 - Fallback Mechanisms](./docs/patterns/11-fallback-mechanisms.md)
 
 Fallback Mechanisms provide alternative actions or responses when a primary operation fails. By implementing fallbacks, applications can maintain functionality or degrade gracefully, improving resilience and user experience during partial outages or failures.
 
