@@ -1,15 +1,80 @@
-# The Retry Pattern
+# Retry
 
-## Description
-Retry patterns are of key importance in cloud applications. Because of the size and scale of applications and infrastructure, transient network errors occur frequently. This means that connections to dependencies must be re-established effectively in case they are lost.
+## Overview
+This pattern focuses on automatically retrying failed operations, such as network calls or database queries, in order to handle transient errors.
 
-## Code Samples
+## Problem Statement
+Applications can sometimes experience intermittent failures or timeouts. Without a retry mechanism, these transient errors can cause the entire process to fail.
 
-### Good Example
+## Solution
+Implement a retry strategy that captures errors and attempts the operation again after a delay. This helps recover from temporary problems without manual intervention.
 
-### Bad Example
+## When to Use
+- Network calls that occasionally fail due to transient issues.
+- Database connections susceptible to temporary timeouts.
+- External service calls where responses might be unreliable.
 
+## Benefits
+- Reduces downtime by transparently recovering from intermittent failures.
+- Increases fault tolerance with minimal code changes.
+- Improves the end-user experience by masking transient errors.
 
-## Linked Artifacts
+## Code Samples: C#
 
+**Before pattern implementation**
+```csharp
+public async Task<string> GetDataAsync()
+{
+    // Direct call with no retries
+    return await SomeHttpClient.GetStringAsync("https://example.com/data");
+}
+```
 
+**Pattern implementation**
+
+```csharp
+public async Task<string> GetDataWithRetryAsync()
+{
+    var retryCount = 3;
+    for (int i = 0; i < retryCount; i++)
+    {
+        try
+        {
+            return await SomeHttpClient.GetStringAsync("https://example.com/data");
+        }
+        catch (HttpRequestException ex)
+        {
+            if (i == retryCount - 1) throw;
+            await Task.Delay(TimeSpan.FromSeconds(2));
+        }
+    }
+    return string.Empty;
+}
+```
+## Code Samples: Python
+
+**Before pattern implementation**
+```python
+# ...existing code...
+import requests
+
+def get_data():
+    return requests.get("https://example.com/data").text
+```
+
+**Pattern implementation**
+```python
+import time
+import requests
+
+def get_data_with_retry(retry_count=3, delay=2):
+    for attempt in range(retry_count):
+        try:
+            response = requests.get("https://example.com/data")
+            return response.text
+        except requests.exceptions.RequestException:
+            if attempt == retry_count - 1:
+                raise
+            time.sleep(delay)
+    return None
+```
