@@ -8,7 +8,7 @@ Deploy the application to an exiting Azure Function App running on an Elastic Pr
 
 ## Load Test
 
-Use Azure load testing to run a load test against the function app. A 15 mninute test with as much load as possible should be enough to make the issue surface.
+Use Azure load testing to run a load test against the function app. A 15 minute test with as much load as possible should be enough to make the issue surface.
 
 ## Check the Bad Async Pattern detector
 
