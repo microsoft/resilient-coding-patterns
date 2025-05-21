@@ -25,7 +25,7 @@ After a while if you check the cluster load balancer you should see that there a
 
 ## Fix the code
 
-Modify the deploymnet to set the `FIXED` environment variable to `1` and redeploy the application.
+Modify the deployment to set the `FIXED` environment variable to `1` and redeploy the application.
 
 ```bash
 kubectl apply -f aks-snat-glitch.yaml
