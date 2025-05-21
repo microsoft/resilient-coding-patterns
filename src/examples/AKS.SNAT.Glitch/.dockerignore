@@ -13,7 +13,6 @@ k8s/
 *.yml
 *.tf
 *.tfstate*
-Dockerfile
 docker-compose*
 .git/
 .gitignore
