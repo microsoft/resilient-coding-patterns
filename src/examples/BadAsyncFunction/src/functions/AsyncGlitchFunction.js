@@ -7,8 +7,8 @@ app.http('AsyncGlitchFunction', {
         context.log('Function started, but async call is not properly awaited.');
 
         // Incorrectly calling an async method without awaiting it
+        // This omission of 'await' is intentional to demonstrate a bad async pattern.
         const result = fetchDataFromApi(context);
-
         context.log('Returning response before async task completes.');
         return { body: `This function returns before the async operation finishes!` };
     }
