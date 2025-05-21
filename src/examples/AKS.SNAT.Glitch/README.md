@@ -2,7 +2,7 @@
 
 ## Deploy the cluster
 
-Run th eprovided terraform script to create the AKS cluster.
+Run the provided terraform script to create the AKS cluster.
 
 ```bash
 cd terraform
