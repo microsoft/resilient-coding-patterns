@@ -21,7 +21,7 @@ kubectl apply -f aks-snat-glitch.yaml
 
 ## Check the cluster
 
-After a while if you check the cluster load balnacer you should see that there are SNAT issues.
+After a while if you check the cluster load balancer you should see that there are SNAT issues.
 
 ## Fix the code
 
