@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: snat-glitch
+  labels:
+    app: snat-glitch
+spec:
+  replicas: 100
+  selector:
+    matchLabels:
+      app: snat-glitch
+  template:
+    metadata:
+      labels:
+        app: snat-glitch
+    spec:
+      containers:
+        - name: snat-glitch
+          image: ghcr.io/microsoft/resilient-coding-patterns/snat-glitch:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          env:
+            - name: PUBLIC_RESOURCE_URL
+              value: "https://example.com"
+            - name: FIXED
+              value: "0"
